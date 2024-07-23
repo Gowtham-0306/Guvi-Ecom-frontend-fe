@@ -1,9 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import taskdetailsreducer from "./reducers/taskdetailsreducer";
 
-export default configureStore({
+import productdetailsreducer from "./reducers/productdetailsreducer";
+
+ export const store =  configureStore({
     // ROOT REDUCER
     reducer: {
-     Taskdetails : taskdetailsreducer
+      productdetails : productdetailsreducer
     },
   });

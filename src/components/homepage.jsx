@@ -4,37 +4,99 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { Navbar } from "./navbar";
-import { Taskcard } from "./taskcard";
-import { Sorting } from "./sortfilters";
+import { Taskcard } from "./ecomcard";
+
 import axios from "axios";
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { fetchDataFromAPI } from "./redux/reducers/apidatas";
-import { storeediteddata } from "./redux/reducers/taskdetailsreducer";
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { storeediteddata , checkisvalidadmin  } from "./redux/reducers/productdetailsreducer";
+import { BrowserRouter, Routes, Route, useNavigate , useLocation } from "react-router-dom";
+import { Login } from "./loginpage";
 
-export function Homepage() {
+export function Homepage({cartStatus=()=>{},
+handlecart= () =>{} , products =[] , cart = {cart}
+
+, ispresent=Boolean , handleisproductalreadyadded=()=>{},
+
+cartcount ={count} , setisvalidadmincreds=()=>{} ,isvalidadmincreds={isvalidadmincreds}
+
+}) {
   const navigate = useNavigate();
-  const [filteredTasks, setFilteredTasks] = useState([]);
+  const [filteredproducts, setfilteredproducts] = useState([]);
   const dispatch = useDispatch();
-  const selectedStatus = useSelector(state => state.Taskdetails.selectedStatus);
+   const selectedStatus = useSelector(state => state.productdetails.selectedStatus);
+   const cartdetails = useSelector(state => state.productdetails.cart);
+   const datastorender = useSelector(state => state.productdetails.data);
   const [savedbutton, setsavedbutton] = useState(false);
   const [deletebutton, setdeletebutton] = useState(false);
+  const [isvalid, setisvalid] = useState(false);
+  const [isvalidadmn, setisvalidadmn] = useState(false);
+  const location = useLocation(); // Get the location object
+  const currentPath = location.pathname; 
+
+
+
   useEffect(() => {
     fetchDataFromAPI(dispatch);
+    
     setdeletebutton(false);
+
+
+
+
+
   }, [dispatch, savedbutton, deletebutton]);
-  const tasks = useSelector((state) => state.Taskdetails.data);
-  console.log(tasks);
-
-
-
+ 
   
+function handlecheckproductalreadyadded(product){
+   (product);
+
+return cartproducts.some((item)=> item._id === productdetails._id);
+
+}
+
+
+
+  const tasks = useSelector((state) => state.productdetails.data);
+
+
+  const validadminentered = useSelector((state)=>state.productdetails.isvalidadmin);
+   (validadminentered);
+  
+
+ ///to get if the user is valid admin or not
+
+ 
+
+useEffect(()=>{
+ const isAdmin = localStorage.getItem('isAdmin') === 'true';
+ const usernametodisplay = localStorage.getItem('username');
+ const password = localStorage.getItem('password');
+ console.log(usernametodisplay);
+  (isAdmin);
+if(isAdmin){
+ (isAdmin);
+setvalidadmin(isAdmin)
+console.log(usernametodisplay);
+}
+
+})
+
+
+
+
+
  
   useEffect(() => {
     const token = localStorage.getItem('token');
+//     const isAdmin = localStorage.getItem('isAdmin') === 'true';
+// if(isAdmin){
 
+// setisvalidadmincredentials(isAdmin);
+
+// }
     if (!token) {
       navigate('/');
     }
@@ -48,96 +110,134 @@ export function Homepage() {
   
   
   const [errors, setErrors] = useState({
-    taskname: false,
-    taskdesc: false,
-    taskcatogery: false,
+    productname: false,
+    productdescription: false,
+    productprice: false,
+    imageurl : false
   });
-  const [taskdetails, settaskdetails] = React.useState({
-    taskname: "",
-    taskdesc: "",
-    taskstatus: "",
-    taskcatogery: ""
+  const [productdetails, setproductdetails] = React.useState({
+    productname: "",
+    productdescription: "",
+    productprice: "",
+ imageurl : "" ,
+    productrating :0
   });
 
   const [editableCardId, setEditableCardId] = useState(null);
-
-
-  const handleTaskDelete = async (taskId, taskname, isdeleteclicked = Boolean) => {
-    console.log("Deleting task with ID:", taskId , taskname);
-    try {
-      const response = await axios.delete(`https://guvi-final-node-2.onrender.com/api/taskdelete/${taskId}`);
-      console.log("Task deleted successfully");
-      console.log(response);
-      if(response.data.deleteduserdata){
-        console.log(`deleted`);
-        const updatedTasks = tasks.filter(task => task._id !== taskId);
-        if (updatedTasks.length > 0) {
-          dispatch({ type: 'UPDATE_TASKS', payload: updatedTasks });
-        } else {
-          console.log("No tasks remaining after deletion");
-          dispatch({ type: 'UPDATE_TASKS', payload: updatedTasks });
-        }
-        setdeletebutton(true);
-      }
-    } catch (error) {
-      console.error("Error deleting task:", error);
-    }
+  const [validadmin, setvalidadmin] = useState(false);
+  const [datastorenderupdated, setdatastorenderupdated] = useState([]);
+const isvalidadmincredentials = useSelector((state)=>state.productdetails.isvalidmin);
+ (isvalidadmincredentials);
+  const handleTaskDelete = async (taskId, productname, isdeleteclicked = Boolean) => {
+     ("Deleting task with ID:", taskId , productname);
+    // try {
+    //   const response = await axios.delete(`http://127.0.0.1:3000/api/taskdelete/${taskId}`);
+    //    ("Task deleted successfully");
+      
+    //   if(response.data.deleteduserdata){
+    //      (`deleted`);
+    //     const updatedTasks = tasks.filter(task => task._id !== taskId);
+    //     if (updatedTasks.length > 0) {
+    //       dispatch({ type: 'UPDATE_TASKS', payload: updatedTasks });
+    //     } else {
+    //        ("No tasks remaining after deletion");
+    //       dispatch({ type: 'UPDATE_TASKS', payload: updatedTasks });
+    //     }
+    //     setdeletebutton(true);
+    //   }
+    // } catch (error) {
+    //   console.error("Error deleting task:", error);
+    // }
   };
   
   async function handleAddTask() {
-    if (!taskdetails.taskname || !taskdetails.taskdesc || !taskdetails.taskcatogery) {
+    if (!productdetails.productname || !productdetails.productdescription || !productdetails.productprice || !productdetails.imageurl) {
       console.error("Please fill in all required fields");
       setErrors({
-        taskname: !taskdetails.taskname,
-        taskdesc: !taskdetails.taskdesc,
-        taskcatogery: !taskdetails.taskcatogery,
+        productname: !productdetails.productname,
+        productdescription: !productdetails.productdescription,
+        productprice: !productdetails.productprice,
+        imageurl : !productdetails.imageurl
       });
       return;
     }
     try {
-      const response = await axios.post("https://guvi-final-node-2.onrender.com/createtaskdetails", {
-        ...taskdetails,
-        taskstatus: "NotCompleted",
+       (`hit g`);
+   
+      const response = await axios.post("https://guvi-ecom-nodejs-be-1.onrender.com/createproduct", {
+        ...productdetails,
+       
       });
       if (response.status === 200) {
-        console.log(`Task details saved`);
-        console.log(response.data.userdata);
-        const newTask = { ...taskdetails, id: response.data.taskname };
-        const updatedTasks = [...tasks, newTask];
-        dispatch({ type: 'UPDATE_TASKS', payload: updatedTasks });
+ console.log(`saved`)
+// const datas = [...datastorender, ...productdetails ];
+ const datas = [...datastorender , productdetails]     
+ console.log(datas
+ );   // console.log(...datastorender , ...productdetails);
+   // dispatch(storeproductsSuccess(datas ));
+       //const updated = response;
+       //console.log(updated);
+  //      dispatch({ type: 'UPDATE_TASKS', payload: updatedTasks });
+      
         setsavedbutton(true);
         setTimeout(() => {
           setsavedbutton(false);
         }, 1000);
-        settaskdetails({
-          taskname: "",
-          taskdesc: "",
-          taskstatus: "",
-          taskcatogery: ""
+        setproductdetails({
+          productname: "",
+    productdescription: "",
+    productprice: "",
+ imageurl : "" ,
+    productrating :0 ,
+    
         });
 
         
       } 
       else {
-        console.log("Task details not saved");
+         ("Task details not saved");
       }
     } catch (err) {
-      console.log(err);
+       (err);
     }
   }
 
-  async function handleclickedit(editedtaskdetails, taskid) {
-    if (!editedtaskdetails.taskname || !editedtaskdetails.taskdesc || !editedtaskdetails.taskcatogery) {
+
+function handleupdatenewchanges(product){
+
+
+var datacopy = [...datastorender];
+
+var newdatas = datacopy.fi
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+  async function handleclickedit(editedproductdetails, taskid) {
+    if (!editedproductdetails.productname || !editedproductdetails.productdescription || !editedproductdetails.productprice) {
       console.error("Please fill in all required fields");
       return;
     }
   
     try {
-      const response = await axios.put(`https://guvi-final-node-2.onrender.com/updateuser/${taskid}`, editedtaskdetails);
+      const response = await axios.put(`https://guvi-ecom-nodejs-be-1.onrender.com/updateuser/${taskid}`, editedproductdetails);
       if (response) {
-        console.log("Task updated successfully");
-        console.log(response.data); // Assuming the response contains the updated task object
-  console.log(response.data.user);
+         ("Task updated successfully");
+         (response.data); // Assuming the response contains the updated task object
+   (response.data.user);
         // Dispatch an action to update Redux state with the updated task
         dispatch(storeediteddata(response.data.user)); // Assuming storeTasksSuccess action creator is defined
       }
@@ -147,75 +247,95 @@ export function Homepage() {
   }
   
   useEffect(() => {
-    console.log(selectedStatus);
-    const filteredTasks = selectedStatus
+     (selectedStatus);
+    const filteredproducts = selectedStatus
       ? tasks.filter(task => task.taskstatus === selectedStatus)
       : tasks;
-    setFilteredTasks(filteredTasks);
+    setfilteredproducts(filteredproducts);
   }, [selectedStatus, tasks]);
 
 
 
 
-
-  console.log(filteredTasks);
+  
   return (
     <>
       <Grid container>
         <Grid item xs={12}>
-          <Navbar />
+          <Navbar cartcount ={cartcount} />
         </Grid>
       </Grid>
 
-      <Grid container className={styles.homepagefields}>
+
+{/* section for admin starts */}
+
+
+
+
+{ validadmin ? (
+  <Grid container className={styles.homepagefields}>
         <Grid item>
           <Box
             component="form"
             sx={{
-              '& > :not(style)': { m: 1, width: '24ch' },
+              '& > :not(style)': { m: 1, width: '20ch' },
             }}
             noValidate
             autoComplete="off"
           >
             <TextField
               id="outlined-controlled1"
-              label="Task Title"
+              label="product Title"
               onChange={(event) => {
-                settaskdetails({ ...taskdetails, taskname: event.target.value });
+                setproductdetails({ ...productdetails, productname: event.target.value });
                 if (event.target.value.length > 0) {
-                  setErrors({ ...errors, taskname: false });
+                  setErrors({ ...errors, productname: false });
                 }
               }}
-              error={errors.taskname}
-              helperText={errors.taskname ? 'Task name is required' : ''}
-              value={taskdetails.taskname}
+              error={errors.productname}
+              helperText={errors.productname ? 'Task name is required' : ''}
+              value={productdetails.productname}
             />
             <TextField
               id="outlined-controlled2"
-              label="Task Description"
+              label="product Description"
               onChange={(event) => {
-                settaskdetails({ ...taskdetails, taskdesc: event.target.value });
+                setproductdetails({ ...productdetails, productdescription: event.target.value });
                 if (event.target.value.length > 0) {
-                  setErrors({ ...errors, taskdesc: false });
+                  setErrors({ ...errors, productdescription: false });
                 }
               }}
-              error={errors.taskdesc}
-              helperText={errors.taskdesc ? 'Task description is required' : ''}
-              value={taskdetails.taskdesc}
+              error={errors.productdescription}
+              helperText={errors.productdescription ? 'Task description is required' : ''}
+              value={productdetails.productdescription}
             />
             <TextField
               id="outlined-controlled3"
-              label="Task Category"
+              label="product price"
               onChange={(event) => {
-                settaskdetails({ ...taskdetails, taskcatogery: event.target.value });
+                setproductdetails({ ...productdetails, productprice: event.target.value });
                 if (event.target.value.length > 0) {
-                  setErrors({ ...errors, taskcatogery: false });
+                  setErrors({ ...errors, productprice: false });
                 }
               }}
-              error={errors.taskcatogery}
-              helperText={errors.taskcatogery ? 'Task category is required' : ''}
-              value={taskdetails.taskcatogery}
+              error={errors.productprice}
+              helperText={errors.productprice ? 'Task category is required' : ''}
+              value={productdetails.productprice}
             />
+              <TextField
+              id="outlined-controlled3"
+              label="image url"
+              onChange={(event) => {
+                setproductdetails({ ...productdetails, imageurl: event.target.value });
+                if (event.target.value.length > 0) {
+                  setErrors({ ...errors, imageurl: false });
+                }
+              }}
+              error={errors.imageurl}
+              helperText={errors.imageurl ? 'Task category is required' : ''}
+              value={productdetails.imageurl}
+            />
+              
             <Button
               variant="contained"
               size="small"
@@ -224,36 +344,66 @@ export function Homepage() {
             >
               {savedbutton ? (
                 <>
-                  <span>Task saved</span>
+                  <span>Products saved</span>
                   <DoneOutlineIcon />
                 </>
-              ) : "Add Task"}
+              ) : "Add product"}
             </Button>
           </Box>
         </Grid>
-      </Grid>
+      </Grid> 
+) : (  <Grid container className={styles.homepagefields}>
+<Typography variant=" h3" style={{color : "gold"}}>
+
+
+
+        
+ Welcome to zara dress shop
+</Typography>
+  </Grid>)
+
+
+}
+
+      {/* section for admin ends */}
+
+
+
+{/* section for user starts*/}
+
+    
+
+{/* section for user ends */}
+
+
 
       {/* Sorting component */}
-      <Sorting  setfiltername={setfiltername}/>
+    
 
       {/* Task cards */}
       <Grid container>
-      <Grid container rowGap={1} columnGap={7} className={styles.homepagecards}>
-  {filteredTasks && filteredTasks.length > 0 ? (
+      <Grid container rowGap={1} columnGap={5} className={styles.homepagecards}>
+  {datastorender && datastorender.length > 0 ? (
     // Filter tasks based on selectedFilter before mapping
-    filteredTasks.map((data, index) => (
+    datastorender.map((data, index) => (
       <Grid item md={3} key={data._id}>
         <Taskcard 
-          taskdetails={data} 
+          productdetails={data} 
           handletaskdelete={handleTaskDelete}  
           handleclickedit={handleclickedit}  
           editable={editableCardId === data._id} 
           handleCardEdit={setEditableCardId}
+          handlecart={handlecart}
+          handleisproductalreadyadded= { handleisproductalreadyadded(data)}
+          cartStatus={cartStatus}
+        
+       
+          handleupdatenewchanges={handleupdatenewchanges}
         />
       </Grid>
     ))
   ) : (
-    <Typography>{filteredTasks.length > 0 ? "loading..." : "No tasks found"}</Typography>
+    <Typography>{filteredproducts.length > 0 ? "loading..." : "No products found"}</Typography>
   )}
 </Grid>
 
@@ -262,5 +412,3 @@ export function Homepage() {
     </>
   );
 }
-
-

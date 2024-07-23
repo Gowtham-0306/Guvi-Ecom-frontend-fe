@@ -1,4 +1,4 @@
-import { Grid } from "@mui/material";
+import { Checkbox, Grid, Input ,FormLabel, InputLabel} from "@mui/material";
 import styles from "./banner.module.css";
 
 import axios from "axios";
@@ -13,9 +13,11 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { useEffect, useState } from "react";
-import { Homepage } from "./homepage";
-import { useDispatch } from "react-redux";
+import { Userdetails } from "./userdetails";
+import {Homepage} from "./homepage"
+import { useDispatch , useSelector } from "react-redux";
 import { fetchDataFromAPI } from "./redux/reducers/apidatas";
+import {  checkisvalidadmin , storeusercartdetails} from "./redux/reducers/productdetailsreducer";
 
 const style = {
   position: "absolute",
@@ -33,22 +35,33 @@ export function Login({
   modal = false,
   handlemodalClose = () => {},
   modaltype = "login",
+  setisvalidadmincreds =()=>{},
+
+
   
+
 }) {
-  //  console.log(`${modaltype} hit`);
+  //   (`${modaltype} hit`);
+
+
+
+
+
 
 let dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
-  const isHomePresent = location.pathname.includes("/home");
+  const isvalidadminuser = useSelector((state)=>state.productdetails.isvalidmin);
 
-  // console.log(isHomePresent);
 
+  //  (isHomePresent);
+ 
+  const userid = localStorage.getItem('userid');
   const defaultuserCredentials = {
     Username: "",
     password: "",
     email: "",
     phonenumber: "",
+    areyouadmin : false
   };
   const [userCredentials, setuserCredentials] = React.useState(
     defaultuserCredentials
@@ -57,21 +70,23 @@ let dispatch = useDispatch();
   const [signupsuccess, setsignupsuccess] = React.useState(false);
   const [loginfailed, setloginfailed] = React.useState(false);
  
-
+  const location = useLocation(); // Get the location object
+  const currentPath = location.pathname; 
 
   const [errors, setErrors] = useState({
     Username: false,
     password: false,
     email: false,
     phonenumber: false,
+    areyouadmin : false
   });
 
 
 
-
+ (userCredentials);
 
   function handleloginerror() {
-    console.log(`hit`);
+     (`hit`);
 
 setloginfailed(false);
 setsignupsuccess(false);
@@ -81,15 +96,16 @@ setsignupsuccess(false);
 
   function handleregistration(buttontype) {
     if (buttontype === "registration") {
-      // console.log(userCredentials);
-      if (!userCredentials.Username || !userCredentials.password || !userCredentials.email || !userCredentials.phonenumber) {
+      //  (userCredentials);
+      if (!userCredentials.Username || !userCredentials.password || !userCredentials.email || !userCredentials.phonenumber ) {
         console.error("Please fill in all required fields");
-console.log(userCredentials.phonenumber);
+ (userCredentials.phonenumber);
         setErrors({
           Username: !userCredentials.Username ,
           password: !userCredentials.password,
           email: !userCredentials.email,
           phonenumber: !userCredentials.phonenumber,
+     
         })
 
 
@@ -100,21 +116,22 @@ console.log(userCredentials.phonenumber);
 
 
 
-
+ (userCredentials);
 
       axios({
         method: "post",
-        url: "https://guvi-final-node-2.onrender.com/createuser",
+        url: "https://guvi-ecom-nodejs-be-1.onrender.com/createuser",
         data: {
           ...userCredentials,
         },
       }).then((response)=>{
 
 
-        console.log("User created successfully:", response.data);
+         ("User created successfully!!!", response.data);
 
 
         setsignupsuccess(true);
+        setuserCredentials(defaultuserCredentials);
 
       }).catch((error)=>{
 
@@ -146,7 +163,7 @@ console.log(userCredentials.phonenumber);
     //  const navigate = useNavigate();
     if (!userCredentials.Username || !userCredentials.password ) {
       console.error("Please fill in all required fields");
-console.log(userCredentials.phonenumber);
+ (userCredentials.phonenumber);
       setErrors({
         Username: !userCredentials.Username ,
         password: !userCredentials.password,
@@ -161,43 +178,57 @@ console.log(userCredentials.phonenumber);
 
 
 
-    console.log(userCredentials);
+     (userCredentials);
+    Userdetails(userCredentials.areyouadmin);
 
     const response = await axios({
       method: "post",
-      url: "https://guvi-final-node-2.onrender.com/login",
+      url: "https://guvi-ecom-nodejs-be-1.onrender.com/login",
       data: {
         ...userCredentials,
       },
     }).then((response)=>{
 
 
-      console.log("successfull");
-
-console.log(response.status);
+       ("successfull");
 
 
-
-    
-        console.log(response.status);
+       
   
-        if (response.status == 200) {
-          console.log(`valid userr`);
+        if (response.status === 200) {
+
+          localStorage.setItem('username' , `${userCredentials.Username}`);
+       
+
+if(userCredentials.areyouadmin){
+
+  localStorage.setItem('isAdmin', 'true');
+  
+  localStorage.setItem('userid', `${response.data.userdetails._id}`);
+   (`admin tried`);
+}
+
+           (`valid userr`);
+   (response.data.userdetails.areyouadmin);
+
+  fetchDataFromAPI(response.data.userdetails.areyouadmin);
   
           const token = response.data.token;
   
           localStorage.setItem("token", token);
   
-  
+   (userCredentials.areyouadmin);
   
           navigate("/home");
-  
+          dispatch(checkisvalidadmin(userCredentials.areyouadmin));
           fetchDataFromAPI(dispatch);
+          setuserCredentials(defaultuserCredentials);
+        
   
   
         } else  {
           alert("invalid creds");
-          console.log("invalid user");
+           ("invalid user");
         }
       
 
@@ -211,9 +242,12 @@ console.log(response.status);
 
       console.error("Error creating user:", error);
       // You can also check for specific error status codes and handle them differently if needed
-      if (error.response.status === 400) {
+      // if (error.response.status === 400) {
+
 setloginfailed(true);
-      }
+
+
+      // }
 
 
 
@@ -227,9 +261,9 @@ setloginfailed(true);
         <Modal
           open={modal}
           onClose={()=>{
-            console.log(`h`);
+             (`h`);
 
-            handleClose();
+           
            
 
             
@@ -281,7 +315,7 @@ setloginfailed(true);
                       Username: event.target.value,
                     });
               
-                    console.log(event.target.value);
+                     (event.target.value);
 
                     if(event.target.value.length > 0){
 setErrors({...errors ,
@@ -289,7 +323,7 @@ setErrors({...errors ,
                    });
                     }
                     
-                    console.log(userCredentials);
+                     (userCredentials);
                   }}
 
                   error={errors.Username}
@@ -331,6 +365,32 @@ setErrors({...errors ,
                   error ={errors.password}
                   helperText={errors.password ? 'password is required' : ''} 
                 />
+
+
+<InputLabel   error={errors.areyouadmin} >
+               Are you admin
+               <Checkbox    value={userCredentials.areyouadmin}     checked={userCredentials.areyouadmin}            onChange={(event) => {
+                 (event.target.checked);
+                        setuserCredentials({
+                          ...userCredentials,
+                          areyouadmin: event.target.checked,
+                        });
+
+                        if(event.target.checked){
+                          setErrors({...errors ,
+                            areyouadmin : false
+                                             });
+                                              }
+                        
+                        //  (userCredentials);
+                      }}>
+                
+               </Checkbox>
+              
+               </InputLabel>
+
+
+
 
                 {modaltype === "registration" && (
                   <>
@@ -386,13 +446,45 @@ setErrors({...errors ,
                                              });
                                               }
                         
-                        // console.log(userCredentials);
+                        //  (userCredentials);
                       }}
                       error ={errors.phonenumber}
                       helperText={errors.phonenumber ? 'Phone number is required' : ''} 
                     />
+                  
+
+<Box sx={{marginTop : 2}} fullWidth >
+
+
+
+               
+
+</Box>
+                 
+
+
+             
+       
+
+
+
+   
+
+                    
+
+
+
+
+
+
+
+
+
                   </>
                 )}
+
+
+                
               </DialogContent>
             </Grid>
 
@@ -402,9 +494,12 @@ setErrors({...errors ,
                 style={{ marginRight: 4 }}
                 onClick={(e) => {
                   handleregistration(modaltype);
+
+
+                  Userdetails(userCredentials);
                 }}
               >
-                {modaltype === "login" ? "login" : "signup"}
+                {modaltype === "login" ? "login" :  "signup"}
               </Button>
               <Button variant="contained" onClick={()=>{
 
