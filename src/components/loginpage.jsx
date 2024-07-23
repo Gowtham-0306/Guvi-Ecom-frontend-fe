@@ -296,6 +296,19 @@ setloginfailed(true);
                 : "Enter your credentials to signup"}
             </Typography>
 
+
+
+
+            { modaltype === "login" &&(
+     <Typography variant="h6" style={{fontSize : "smaller" , color : "red"}}>
+
+     Note : select "Are you admin" checkbox only if you have Admin log in credentials
+     </Typography>
+)
+
+
+}
+       
             <Grid item>
               <DialogContent>
                 <TextField
@@ -369,6 +382,8 @@ setErrors({...errors ,
 
 <InputLabel   error={errors.areyouadmin} >
                Are you admin
+
+             
                <Checkbox    value={userCredentials.areyouadmin}     checked={userCredentials.areyouadmin}            onChange={(event) => {
                  (event.target.checked);
                         setuserCredentials({
