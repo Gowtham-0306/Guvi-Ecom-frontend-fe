@@ -69,7 +69,7 @@ return(
 }}>
 
 
-   Your selected products are listed below 
+   Your selected products are listed below :
     
 </Typography>
 
