@@ -89,7 +89,7 @@ return(
 }}>
 
 
-    Total Products : {products.length} 
+       Total Products : {products.length} and total amount :  {totalamount} <CurrencyRupeeIcon/> 
     
 </Typography>
 </Grid>
