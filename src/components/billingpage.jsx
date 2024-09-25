@@ -75,14 +75,7 @@ return(
 
 
 
-<Typography style={{textAlign : "center" ,
-    "color" : "white" , fontFamily : "sans-serif" , fontWeight : "bolder"
-}}>
 
-
-    Total Amount : {totalamount} <CurrencyRupeeIcon/>
-    
-</Typography>
 
 <Typography style={{textAlign : "center" ,
     "color" : "white" , fontFamily : "sans-serif" , fontWeight : "bolder"
