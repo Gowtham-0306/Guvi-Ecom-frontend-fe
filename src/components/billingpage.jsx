@@ -49,19 +49,20 @@ return(
     <>
 
 
-   <Grid container height={ "100vh"} style={{backgroundColor : "transparent"}}>
 
-   <Navbar cartcount={cartcount}  />
+
+   <Navbar cartcount={cartcount} totalprice = {totalamount} />
     
 
    <Grid container  style={{  display : "flex",alignItems : "center",
-        justifyContent : "center" , width : "100%" , height : "100vh" , marginTop : "5%"
+        justifyContent : "center" , width : "100%" , paddingTop : "50px"
         , flexDirection : "row"
     }} >
 
  
+
 <Grid style={{backgroundColor : "rgb(83,53,37)" , width : "100%", display : "flex", 
-    alignItems : "center",
+    alignItems : "center", 
         justifyContent : "center" ,boxshadow : '0.3s ease' , height : "80px" , flexDirection : "column"
 }}>
 <Typography style={{textAlign : "center" ,
@@ -77,19 +78,47 @@ return(
 
 
 
+
+
+
 <Typography style={{textAlign : "center" ,
     "color" : "white" , fontFamily : "sans-serif" , fontWeight : "bolder"
 }}>
 
 
        Total Products : {products.length} and total amount :  {totalamount} <CurrencyRupeeIcon/> 
+
+       
+
+
+       
     
 </Typography>
+
+
+
+
+
+
+
+
 </Grid>
 
+
+
+
+
+
+
+
+
+
+
+
+
 <Grid item style={{  alignItems : "center",
-        justifyContent : "center" , width : "100%" , height : "100vh" , margin : "auto"
-        , display : "flex" , flexDirection  : "row"
+        justifyContent : "center" , width : "100%"  , margin : "auto"
+        , display : "flex" , flexDirection  : "row" , 
     }} > 
 {
     products.map((item)=>(
@@ -109,8 +138,7 @@ return(
     </Grid>
 
         
-    </Grid>
-        
+   
         
          </>
 )
