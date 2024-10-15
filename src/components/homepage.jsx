@@ -132,7 +132,7 @@ const isvalidadmincredentials = useSelector((state)=>state.productdetails.isvali
      ("Deleting task with ID:", taskId , productname);
     // try {
     //   const response = await axios.delete(`http://127.0.0.1:3000/api/taskdelete/${taskId}`);
-    //    ("Task deleted successfully");
+    //    (" deleted successfully");
       
     //   if(response.data.deleteduserdata){
     //      (`deleted`);
@@ -293,7 +293,7 @@ var newdatas = datacopy.fi
                 }
               }}
               error={errors.productname}
-              helperText={errors.productname ? 'Task name is required' : ''}
+              helperText={errors.productname ? 'product name is required' : ''}
               value={productdetails.productname}
             />
             <TextField
@@ -306,7 +306,7 @@ var newdatas = datacopy.fi
                 }
               }}
               error={errors.productdescription}
-              helperText={errors.productdescription ? 'Task description is required' : ''}
+              helperText={errors.productdescription ? ' Description is required' : ''}
               value={productdetails.productdescription}
             />
             <TextField
@@ -319,7 +319,7 @@ var newdatas = datacopy.fi
                 }
               }}
               error={errors.productprice}
-              helperText={errors.productprice ? 'Task category is required' : ''}
+              helperText={errors.productprice ? ' Category is required' : ''}
               value={productdetails.productprice}
             />
               <TextField
@@ -332,7 +332,7 @@ var newdatas = datacopy.fi
                 }
               }}
               error={errors.imageurl}
-              helperText={errors.imageurl ? 'Task category is required' : ''}
+              helperText={errors.imageurl ? ' Category is required' : ''}
               value={productdetails.imageurl}
             />
               
