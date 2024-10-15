@@ -340,7 +340,7 @@ rzp1.open();
                         event.target.style.color = "gold";
                       }}
                     >
-                      Proceed for billing
+                      Proceed to pay
                     </Button>
                   ) : (
                     ""
